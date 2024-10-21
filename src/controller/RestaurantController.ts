@@ -7,15 +7,16 @@ const getRestaurant = async (req: Request, res: Response) => {
 
     const restaurant = await Restaurant.findById(restaurantId);
     if (!restaurant) {
-      return res.status(404).json({ message: "Restaurant not found" });
+      return res.status(404).json({ message: "restaurant not found" });
     }
 
     res.json(restaurant);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Something went wrong" });
+    res.status(500).json({ message: "something went wrong" });
   }
 };
+
 const searchRestaurant = async (req: Request, res: Response) => {
   try {
     const city = req.params.city;
@@ -49,9 +50,6 @@ const searchRestaurant = async (req: Request, res: Response) => {
     }
 
     if (searchQuery) {
-      // restaurantName = Pizza Place
-      // cuisines = [Pizza, Pasta]
-      // searchQuery = Pasta
       const searchRegex = new RegExp(searchQuery, "i");
       query["$or"] = [
         { restaurantName: searchRegex },
@@ -62,6 +60,7 @@ const searchRestaurant = async (req: Request, res: Response) => {
     const pageSize = 10;
     const skip = (page - 1) * pageSize;
 
+    // sortOption = "lastUpdated"
     const restaurants = await Restaurant.find(query)
       .sort({ [sortOption]: 1 })
       .skip(skip)
@@ -87,6 +86,6 @@ const searchRestaurant = async (req: Request, res: Response) => {
 };
 
 export default {
-  searchRestaurant,
   getRestaurant,
+  searchRestaurant,
 };
